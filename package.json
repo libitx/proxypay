@@ -1,0 +1,29 @@
+{
+  "name": "proxypay",
+  "version": "0.0.1",
+  "description": "A library for building and broadcasting transactions to the Bitcoin SV blockchain.",
+  "main": "index.js",
+  "repository": "https://github.com/libitx/proxypay",
+  "author": "libitx",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c rollup.config.js"
+  },
+  "peerDependencies": {
+    "bsv": "^0.27.1"
+  },
+  "dependencies": {
+    "eventsource": "^1.0.7",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "rollup": "^1.16.3",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-banner": "^0.2.0",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-uglify": "^6.0.2"
+  }
+}
