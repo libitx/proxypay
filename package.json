@@ -1,7 +1,7 @@
 {
   "name": "proxypay",
   "version": "0.0.1",
-  "description": "A library for building and broadcasting transactions to the Bitcoin SV blockchain.",
+  "description": "Broadcast complex transactions to the Bitcoin SV blockchain from any wallet.",
   "main": "index.js",
   "repository": "https://github.com/libitx/proxypay",
   "author": "libitx",

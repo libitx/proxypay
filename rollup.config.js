@@ -11,15 +11,15 @@ export default  {
     format: 'umd',
     name: 'proxypay',
     globals: {
+      bsv: 'bsv',
       eventsource: 'EventSource'
     }
   },
-  external: ['eventsource'],
+  external: ['bsv', 'eventsource'],
   
   plugins: [
     resolve({
-      browser: true,
-      preferBuiltins: true
+      browser: true
     }),
     commonjs(),
     babel({

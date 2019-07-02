@@ -8,8 +8,7 @@ const bitdb = {
       v: 3,
       q: {
         find: {
-          "out.e.a": address,
-          "out.e.v": amount
+          "out.e.a": address
         }
       }
     }

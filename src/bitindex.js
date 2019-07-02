@@ -1,8 +1,10 @@
 const fetch = require('node-fetch')
 
 const baseUrl = 'https://api.bitindex.network/api/v3/main',
-      apiKey  = '3W8siQamFDrwY8VbgM8cX9RXKwcUGqAxhDMd4AyoaGGtTNQhDx25a4xsVFkKv4vkN7',
-      headers = { api_key: apiKey };
+      headers = {
+        'Content-Type': 'application/json',
+        api_key: '3W8siQamFDrwY8VbgM8cX9RXKwcUGqAxhDMd4AyoaGGtTNQhDx25a4xsVFkKv4vkN7'
+      };
 
 const bitindex = {
 
@@ -31,15 +33,19 @@ const bitindex = {
           rawtx = tx.toString(),
           body  = JSON.stringify({ rawtx });
 
-    return fetch(url, { body, headers })
-      .then(r => r.json())
-      .catch(err => {
-        const error = err.response.data.message;
-        const msg = error.message
-          .split('\n')
-          .slice(0, -1)
-          .join(' ')
-        throw new Error(msg)
+    return fetch(url, { method: 'POST', headers, body })
+      .then(r => {
+        const data = r.json()
+        if (!r.ok) {
+          return data.then(err => {
+            const msg = err.message.message
+              .split('\n')
+              .slice(0, -1)
+              .join(' ')
+            throw new Error(msg)
+          })
+        }
+        return data
       })
   }
 
