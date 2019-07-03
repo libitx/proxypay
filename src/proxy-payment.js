@@ -33,7 +33,7 @@ class ProxyPayment {
 
     this.tx = new bsv.Transaction()
     this.tx.change(this.options.changeAddress || this.address)
-    this._fee = 0;
+    this.fee = 0;
 
     this.addOutput(this.options.outputs);
     this.addInput(this.options.inputs);
@@ -52,19 +52,20 @@ class ProxyPayment {
   }
 
   get bip21URI() {
-    const amount = this.fee / 100000000;
+    const amount = this.requiredSatoshis / 100000000;
     return `bitcoin:${ this.address }?sv&amount=${ amount }`;
   }
 
-  get fee() {
-    return Math.max(this._fee, DUST_LIMIT);
+  get totalSatoshis() {
+    return this.fee + (this.tx._outputAmount || 0)
+  }
+
+  get requiredSatoshis() {
+    return Math.max(this.totalSatoshis - (this.tx._inputAmount || 0), DUST_LIMIT)
   }
 
   get isFunded() {
-    const outputSum = this.options.outputs
-      .reduce((sum, o) => sum += o.satoshis || 0, 0)
-    if (this.options.debug) console.log('isFunded?', this.tx._inputAmount, '>=', outputSum + this._fee);
-    return this.tx._inputAmount >= outputSum + this._fee;
+    return this.tx._inputAmount >= this.totalSatoshis;
   }
 
   listen() {
@@ -136,7 +137,10 @@ class ProxyPayment {
   broadcast() {
     if (this.options.debug) console.log('Broadcasting');
 
-    this.tx.fee(this.fee).sign(this.privKey)
+    this.tx
+      .fee( Math.max(this.fee, DUST_LIMIT - (this.tx._outputAmount || 0)) )
+      .sign(this.privKey)
+
     return bitindex.broadcastTx(this.tx)
       .then(tx => {
         this.closeSocket()
@@ -176,11 +180,11 @@ class ProxyPayment {
         satoshis: 1000000,
         script: bsv.Script.fromASM('OP_DUP OP_HASH160 ac1c7026fcae37df56f09082ddb3b83de8dd169e OP_EQUALVERIFY OP_CHECKSIG')
       })
-      this._fee = this.tx._estimateFee()
+      this.fee = this.tx._estimateFee()
       this.tx.inputs = []
       this.tx._inputAmount = undefined
     } else {
-      this._fee = this.tx._estimateFee()
+      this.fee = this.tx._estimateFee()
     }
     return this.fee
   }

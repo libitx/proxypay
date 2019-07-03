@@ -7,10 +7,11 @@
   "author": "libitx",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c rollup.config.js"
+    "build": "rollup -c rollup.config.js",
+    "test": "jasmine --config=test/support/jasmine.json"
   },
   "peerDependencies": {
-    "bsv": "^0.27.1"
+    "bsv": "^0.27.2"
   },
   "dependencies": {
     "eventsource": "^1.0.7",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "jasmine": "^3.4.0",
     "rollup": "^1.16.3",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-banner": "^0.2.0",
