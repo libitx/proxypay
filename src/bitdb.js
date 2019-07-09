@@ -1,6 +1,7 @@
 const EventSource = require('eventsource') 
 
 const bitdb = {
+  EventSource,
   url: 'https://neongenesis.bitdb.network/s/1HcBPzWoKDL2FhCMbocQmLuFTYsiD73u1j/',
 
   listen(address, amount) {
@@ -13,7 +14,7 @@ const bitdb = {
       }
     }
     const url = this.url + this._encodeQuery(query);
-    return new EventSource(url)
+    return new this.EventSource(url)
   },
 
   _encodeQuery(query) {

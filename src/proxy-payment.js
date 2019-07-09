@@ -61,7 +61,8 @@ class ProxyPayment {
   }
 
   get requiredSatoshis() {
-    return Math.max(this.totalSatoshis - (this.tx._inputAmount || 0), DUST_LIMIT)
+    const amount = this.totalSatoshis - (this.tx._inputAmount || 0)
+    return amount > 0 ? Math.max(amount, DUST_LIMIT) : 0
   }
 
   get isFunded() {
@@ -137,9 +138,7 @@ class ProxyPayment {
   broadcast() {
     if (this.options.debug) console.log('Broadcasting');
 
-    this.tx
-      .fee( Math.max(this.fee, DUST_LIMIT - (this.tx._outputAmount || 0)) )
-      .sign(this.privKey)
+    this.tx.sign(this.privKey)
 
     return bitindex.broadcastTx(this.tx)
       .then(tx => {
@@ -160,6 +159,7 @@ class ProxyPayment {
       input = bsv.Transaction.UnspentOutput(input)
     }
     this.tx.from(input)
+    this.estimateFee()
   }
 
   addOutput(output) {
@@ -169,6 +169,7 @@ class ProxyPayment {
       output = this._buildOutput(output)
     }
     this.tx.addOutput(output)
+    this.estimateFee()
   }
 
   estimateFee() {
@@ -183,9 +184,11 @@ class ProxyPayment {
       this.fee = this.tx._estimateFee()
       this.tx.inputs = []
       this.tx._inputAmount = undefined
+      this.tx._updateChangeOutput()
     } else {
       this.fee = this.tx._estimateFee()
     }
+    this.tx.fee( Math.max(this.fee, DUST_LIMIT - (this.tx._outputAmount || 0)) )
     return this.fee
   }
 

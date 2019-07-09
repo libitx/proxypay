@@ -20,7 +20,9 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "eventsourcemock": "^2.0.0",
     "jasmine": "^3.4.0",
+    "nock": "^10.0.6",
     "rollup": "^1.16.3",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-banner": "^0.2.0",
