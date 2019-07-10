@@ -1,7 +1,9 @@
 const bsv = require('bsv')
 const bitdb = require('./bitdb')
 const bitindex = require('./bitindex')
-const Buffer = require('buffer').Buffer
+
+// Use built-in all fallback to bsv Buffer
+const _Buffer = typeof Buffer === 'function' ? Buffer : bsv.deps.Buffer;
 
 const DUST_LIMIT = 547;
 
@@ -240,7 +242,7 @@ class ProxyPayment {
     data.forEach(item => {
       // Hex string
       if (typeof item === 'string' && /^0x/i.test(item)) {
-        script.add(Buffer.from(item.slice(2), 'hex'))
+        script.add(_Buffer.from(item.slice(2), 'hex'))
       // Opcode number
       } else if (typeof item === 'number' || item === null) {
         script.add(item || 0)
@@ -249,7 +251,7 @@ class ProxyPayment {
         script.add({ opcodenum: item.op })
       // All else
       } else {
-        script.add(Buffer.from(item))
+        script.add(_Buffer.from(item))
       }
     })
     return script;

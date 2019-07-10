@@ -29,13 +29,13 @@ describe('proxypay', () => {
 
   it('must have an address and BIP21 URI', () => {
     expect(payment.address).toEqual('1ML7LKjt3MMsZWVeuVbUZqoLCezqdAFW9e')
-    expect(payment.bip21URI).toEqual('bitcoin:1ML7LKjt3MMsZWVeuVbUZqoLCezqdAFW9e?sv&amount=0.00000546')
+    expect(payment.bip21URI).toEqual('bitcoin:1ML7LKjt3MMsZWVeuVbUZqoLCezqdAFW9e?sv&amount=0.00000547')
   })
 
   it('must show total and required satoshis', () => {
     expect(payment.fee).toEqual(289)
     expect(payment.totalSatoshis).toEqual(289)
-    expect(payment.requiredSatoshis).toEqual(546)
+    expect(payment.requiredSatoshis).toEqual(547)
     expect(payment.isFunded).toEqual(false)
   })
 
@@ -44,7 +44,7 @@ describe('proxypay', () => {
       payment.addInput({
         txId: '0000000000000000000000000000000000000000000000000000000000000000',
         outputIndex: 0,
-        satoshis: 564,
+        satoshis: 600,
         script: bsv.Script.fromASM('OP_DUP OP_HASH160 ac1c7026fcae37df56f09082ddb3b83de8dd169e OP_EQUALVERIFY OP_CHECKSIG')
       })
     })

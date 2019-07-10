@@ -12,7 +12,6 @@ export default  {
     name: 'proxypay',
     globals: {
       bsv: 'bsv',
-      buffer: 'Buffer',
       eventsource: 'EventSource'
     }
   },
@@ -20,8 +19,7 @@ export default  {
   
   plugins: [
     resolve({
-      browser: true,
-      preferBuiltins: false
+      browser: true
     }),
     commonjs(),
     babel({
