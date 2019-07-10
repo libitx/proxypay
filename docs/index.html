@@ -1,9 +1,174 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hello</title>
+  <title>Proxypay example</title>
+  <link rel="stylesheet" href="//unpkg.com/tachyons">
+  <script src="//cdn.jsdelivr.net/npm/vue"></script>
+  <script src="//unpkg.com/bsv@0.27.2"></script>
+  <!--<script src="//unpkg.com/proxypay/dist/proxypay.min.js"></script>-->
+  <script src="../dist/proxypay.min.js"></script>
+  <script src="//unpkg.com/qrcode-generator"></script>
 </head>
-<body>
-  Hello world
+<body class="sans-serif near-black">
+  <header class="ph3 near-white bg-dark-gray">
+    <div class="mw7 center pt4 pb5">
+      <h1 class="mv0 f-subheadline lh-title light-gray">Proxy<span class="light-blue">pay</span></h1>
+      <h2 class="mv0 f3 lh-title fw3 moon-gray">Demo</h2>
+    </div>
+  </header>
+  <main class="ph3">
+    <div class="mw7 center pv5">
+      <p class="measure-wide mt0 mb4 georgia f4 lh-copy i mid-gray">Proxypay is a library for building complex transaction types which can be broadcast to the Bitcoin SV blockchain by sending a simple payment from any wallet.</p>
+
+      <p class="mv4 measure-wide f5 lh-copy">Enter some text in the field below to build the transaction. A random private key is generated at page load, and by sending the required amount to the generated address, Proxypay will take the UTXO from your payment to broadcast the transaction.</p>
+
+      <div id="demo" class="mb5">
+        <div class="mb4">
+          <label class="db mb2 f6 lh-title mid-gray">Type a message to immortalize on the Bitcoin SV blockchain</label>
+          <textarea class="input-reset w-100 pa2 f4 lh-copy ba b--moon-gray br2"
+            rows="4"
+            placeholder="Type message..."
+            v-model="text"></textarea>
+        </div>
+
+        <div class="flex mb4" v-if="hasPayment">
+          <div class="pr2">
+            <img :src="qrURL" class="ba b--moon-gray" />
+          </div>
+          <div class="flex-auto pl2">
+            <h4 class="mt0 mb3 f5 fw7 lh-title mid-gray">Scan QR code to make payment</h4>
+            <ul class="pl3 mv3 f5 lh-copy">
+              <li>Address: <span class="f6 code fw6 mid-gray">{{ paymentAddress }}</span></li>
+              <li>Amount: <span class="f6 code fw6 mid-gray">{{ paymentAmount }}</span></li>
+              <li>TX Size: <span class="f6 code fw6 mid-gray">{{ paymentSize }} bytes</span></li>
+            </ul>
+            <p class="mv3 f7 lh-copy mid-gray">
+              <a class="link blue hover-hot-pink" :href="paymentURL">{{ paymentURL }}</a>
+            </p>
+            <p class="mv3 f7 lh-copy fw7 dark-grey">Send the precise amount. Change from overpayments will be sent to the Bitpaste tip jar.</p>
+          </div>
+        </div>
+
+        <ol class="ma0 pl4 f4 lh-copy gray" v-show="status >= 1">
+          <li>
+            <span class="fw7 green">Your payment has been recieved. Broadcasting transaction...</span>
+          </li>
+          <li v-show="status === 2">
+            <span class="fw7 green">Success...</span>
+          </li>
+          <li v-show="txid">
+            <a :href="txURL" class="fw7 link blue hover-hot-pink">View your transaction &rarr;</a>
+          </li>
+          <li v-show="status === 3">
+            <span class="fw7 red">Error...</span>
+          </li>
+        </ol>
+      </div>
+
+      <div class="pt4 bt b--light-gray">
+        <h2 class="mt0 mb3 f3 lh-title fw7 silver">More info</h2>
+        <ul class="ma0 pl3 f5 lh-copy">
+          <li><a href="https://github.com/libitx/proxypay/blob/master/docs/index.html" class="link blue hover-hot-pink">View the source of this page</a></li>
+          <li><a href="https://github.com/libitx/proxypay" class="link blue hover-hot-pink">Project Readme</a></li>
+          <li><a href="https://twitter.com/libitx" class="link blue hover-hot-pink">Follow Libs</a></li>
+        </ul>
+      </div>
+      
+    </div>
+  </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(e) {
+  var debounce;
+
+  new Vue({
+    el: '#demo',
+
+    data() {
+      return {
+        text: '',
+        hasPayment: false,
+        status: 0,
+        txid: null
+      }
+    },
+
+    computed: {
+      qrURL() {
+        if (this.hasPayment) return this.$qrcode.createDataURL(6, 8)
+      },
+
+      paymentAddress() {
+        if (this.hasPayment) return this.$payment.address
+      },
+
+      paymentAmount() {
+        if (this.hasPayment) return this.$payment.requiredSatoshis / 100000000
+      },
+
+      paymentSize() {
+        if (this.hasPayment) return this.$payment.tx._estimateSize()
+      },
+
+      paymentURL() {
+        if (this.hasPayment) return this.$payment.bip21URI
+      },
+
+      txURL() {
+        return 'https://bitpaste.app/tx/' + this.txid;
+      }
+    },
+
+    created() {
+      this.debounce = null;
+      this.privKey = bsv.PrivateKey.fromRandom();
+      this.$payment = null;
+      this.$qrcode = null;
+    },
+
+    watch: {
+      text(val) {
+        if (debounce) clearTimeout(debounce);
+        debounce = setTimeout(this.buildPayment, 1000)
+      }
+    },
+
+    methods: {
+      buildPayment() {
+        if (this.$payment) {
+          this.$payment.closeSocket()
+          this.hasPayment = false
+        }
+
+        var $vm = this;
+
+        this.$payment = proxypay({
+          key: this.privKey,
+          changeAddress: '1KpHcTBiBKNGxQQ3NRTxkr3p97HfkZZNKU',
+          outputs: [
+            { data: ['19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut', this.text, 'text/plain', 'utf8', 'Proxypay demo'] }
+          ],
+          onFunded() { $vm.status = 1; this.broadcast() },
+          onPayment(tx) {
+            $vm.status = 2;
+            setTimeout(function() { $vm.txid = tx.txid; }, 1500)
+          },
+          onError(err) {
+            $vm.status = 3;
+            console.error(err)
+          }
+        })
+        this.$qrcode = qrcode(0, 'L')
+        this.$qrcode.addData(this.$payment.bip21URI)
+        this.$qrcode.make()
+        this.hasPayment = true
+      }
+    }
+  })
+
+      
+})
+</script>
+  
 </body>
 </html>

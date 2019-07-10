@@ -2,6 +2,8 @@
 
 Proxypay is a library for building complex transaction types which can be broadcasted to the Bitcoin SV blockchain by sending a simple payment from **any** wallet.
 
+* [View demo](https://libitx.github.io/proxypay)
+
 ### How is Proxypay different from Datapay?
 
 Where the Datapay library requires the use of a private key already funded with a sufficient balance in order to broadcast the transaction, Proxypay excels when used with single-purpose, un-funded private keys.

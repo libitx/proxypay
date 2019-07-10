@@ -1,8 +1,9 @@
 const bsv = require('bsv')
 const bitdb = require('./bitdb')
 const bitindex = require('./bitindex')
+const Buffer = require('buffer').Buffer
 
-const DUST_LIMIT = 546;
+const DUST_LIMIT = 547;
 
 const defaults = {
   inputs: [],
@@ -27,7 +28,7 @@ class ProxyPayment {
       this.privKey = this.options.key
     }
 
-    if (this.privKey.constructor.name !== 'PrivateKey') {
+    if (typeof this.privKey !== 'object' || !Object.keys(this.privKey).includes('publicKey') ) {
       throw new Error('Must initiate ProxyPayment with valid private key')
     }
 

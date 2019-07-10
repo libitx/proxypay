@@ -1,6 +1,6 @@
 {
   "name": "proxypay",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1-beta.3",
   "description": "Broadcast complex transactions to the Bitcoin SV blockchain from any wallet.",
   "main": "index.js",
   "repository": "https://github.com/libitx/proxypay",
@@ -14,6 +14,7 @@
     "bsv": "^0.27.2"
   },
   "dependencies": {
+    "buffer": "^5.2.1",
     "eventsource": "^1.0.7",
     "node-fetch": "^2.6.0"
   },
