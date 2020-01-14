@@ -4,8 +4,9 @@
   <title>Proxypay demo</title>
   <link rel="stylesheet" href="//unpkg.com/tachyons">
   <script src="//cdn.jsdelivr.net/npm/vue"></script>
-  <script src="//unpkg.com/bsv@0.27.2"></script>
+  <script src="//unpkg.com/bsv@1.0.0"></script>
   <script src="//unpkg.com/proxypay/dist/proxypay.min.js"></script>
+  <!--<script src="/dist/proxypay.min.js"></script>-->
   <script src="//unpkg.com/qrcode-generator"></script>
 </head>
 <body class="sans-serif near-black">
@@ -56,7 +57,7 @@
             <span class="fw7 green">Success...</span>
           </li>
           <li v-show="txid">
-            <a :href="txURL" class="fw7 link blue hover-hot-pink">View your transaction &rarr;</a>
+            <a :href="txURL" class="fw7 link blue hover-hot-pink" target="_blank">View your transaction &rarr;</a>
           </li>
           <li v-show="status === 3">
             <span class="fw7 red">Error...</span>
@@ -114,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
       },
 
       txURL() {
-        return 'https://bitpaste.app/tx/' + this.txid;
+        return 'https://www.bitpaste.app/tx/' + this.txid;
       }
     },
 

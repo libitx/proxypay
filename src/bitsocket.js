@@ -1,8 +1,8 @@
 const EventSource = require('eventsource') 
 
-const bitdb = {
+const bitsocket = {
   EventSource,
-  url: 'https://neongenesis.bitdb.network/s/1HcBPzWoKDL2FhCMbocQmLuFTYsiD73u1j/',
+  url: 'https://txo.bitsocket.network/s/',
 
   listen(address, amount) {
     const query = {
@@ -27,4 +27,4 @@ const bitdb = {
   }
 }
 
-module.exports = bitdb
+module.exports = bitsocket

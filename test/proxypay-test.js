@@ -3,7 +3,7 @@ const bsv = require('bsv')
 const nock = require('nock')
 const EventMock = require('eventsourcemock')
 const proxypay = require('../src/index')
-const bitdb = require('../src/bitdb')
+const bitsocket = require('../src/bitsocket')
 
 const key = 'L4JEtjzPy1uHdmDN4cV9K8WReWX2QaSYLEPzoZCmKRW6Hpe1zWgo'
 
@@ -79,7 +79,7 @@ describe('proxypay', () => {
 
   describe('.getUtxo()', () => {
     beforeEach(() => {
-      nock('https://api.bitindex.network')
+      nock('https://api.mattercloud.net')
         .get('/api/v3/main/addr/1ML7LKjt3MMsZWVeuVbUZqoLCezqdAFW9e/utxo')
         .replyWithFile(200, __dirname + '/mocks/getutxo1.json', { 'Content-Type': 'application/json' })
     })
@@ -94,9 +94,9 @@ describe('proxypay', () => {
   })
 
   describe('.listen()', () => {
-    bitdb.EventSource = EventMock.default
+    bitsocket.EventSource = EventMock.default
     const sources = EventMock.sources
-    const url = 'https://neongenesis.bitdb.network/s/1HcBPzWoKDL2FhCMbocQmLuFTYsiD73u1j/eyJ2IjozLCJxIjp7ImZpbmQiOnsib3V0LmUuYSI6IjFNTDdMS2p0M01Nc1pXVmV1VmJVWnFvTENlenFkQUZXOWUifX19'
+    const url = 'https://txo.bitsocket.network/s/eyJ2IjozLCJxIjp7ImZpbmQiOnsib3V0LmUuYSI6IjFNTDdMS2p0M01Nc1pXVmV1VmJVWnFvTENlenFkQUZXOWUifX19'
     
     beforeEach(() => {
       payment.listen()

@@ -1,12 +1,9 @@
 const fetch = require('node-fetch')
 
-const baseUrl = 'https://api.bitindex.network/api/v3/main',
-      headers = {
-        'Content-Type': 'application/json',
-        api_key: '3W8siQamFDrwY8VbgM8cX9RXKwcUGqAxhDMd4AyoaGGtTNQhDx25a4xsVFkKv4vkN7'
-      };
+const baseUrl = 'https://api.mattercloud.net/api/v3/main',
+      headers = { 'Content-Type': 'application/json' };
 
-const bitindex = {
+const api = {
 
   getUtxo(addr) {
     const url = baseUrl + `/addr/${ addr }/utxo`;
@@ -51,4 +48,4 @@ const bitindex = {
 
 }
 
-module.exports = bitindex
+module.exports = api

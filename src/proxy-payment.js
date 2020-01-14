@@ -1,6 +1,6 @@
 const bsv = require('bsv')
-const bitdb = require('./bitdb')
-const bitindex = require('./bitindex')
+const api = require('./api')
+const bitsocket = require('./bitsocket')
 
 // Use built-in all fallback to bsv Buffer
 const _Buffer = typeof Buffer === 'function' ? Buffer : bsv.deps.Buffer;
@@ -103,7 +103,7 @@ class ProxyPayment {
 
   openSocket() {
     if (!this.socket || this.socket.readyState === 2) {
-      this.socket = bitdb.listen(this.address, this.fee)
+      this.socket = bitsocket.listen(this.address, this.fee)
     }
     if (this.options.debug) console.log('Open:', this.socket.url);
     return this;
@@ -118,7 +118,7 @@ class ProxyPayment {
   }
 
   getUtxo() {
-    return bitindex.getUtxo(this.address)
+    return api.getUtxo(this.address)
       .then(utxos => {
         if (this.options.debug) console.log('Utxos:', utxos);
 
@@ -143,7 +143,7 @@ class ProxyPayment {
 
     this.tx.sign(this.privKey)
 
-    return bitindex.broadcastTx(this.tx)
+    return api.broadcastTx(this.tx)
       .then(tx => {
         this.closeSocket()
         this.onPayment(tx)
@@ -199,7 +199,7 @@ class ProxyPayment {
     const changeAddress = address || this.options.changeAddress;
     if (!changeAddress) throw new Error('Must provide an address to sweep to');
     
-    return bitindex.getUtxo(this.address)
+    return api.getUtxo(this.address)
       .then(utxos => {
         const tx = new bsv.Transaction()
           .from(utxos)
@@ -207,7 +207,7 @@ class ProxyPayment {
 
         const fee = tx._estimateFee()
         tx.fee(fee).sign(this.privKey)
-        return bitindex.broadcastTx(tx)
+        return api.broadcastTx(tx)
       })
       .then(tx => {
         this.closeSocket()
