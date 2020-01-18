@@ -1,8 +1,9 @@
 {
   "name": "proxypay",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Broadcast complex transactions to the Bitcoin SV blockchain from any wallet.",
-  "main": "index.js",
+  "main": "src/index.js",
+  "browser": "dist/proxypay.min.js",
   "repository": "https://github.com/libitx/proxypay",
   "author": "libitx",
   "license": "MIT",

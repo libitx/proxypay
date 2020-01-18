@@ -29,7 +29,7 @@ yarn add proxypay
  Include Proxypay into your NodeJS or HTML project:
  
  ```javascript
-import proxypay from 'proxypay'
+const proxypay = require('proxypay')
 ```
 
 ... or in a browser:
@@ -51,7 +51,7 @@ const payment = proxypay({
     { data: ['testing', 'proxypay'] }
   ]
 })
-console.log(`Please send ${ payment.fee } satoshis to ${ payment.address }`)
+console.log(`Please send ${ payment.requiredSatoshis } satoshis to ${ payment.address }`)
 console.log(payment.bip21URI)
 ```
 
