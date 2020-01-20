@@ -60,16 +60,24 @@ class ProxyPayment {
   }
 
   get totalSatoshis() {
-    return this.fee + (this.tx._outputAmount || 0)
+    this.tx._getOutputAmount()
+    const amount = this.fee + (this.tx._outputAmount || 0)
+    return Math.max(amount, DUST_LIMIT)
   }
 
   get requiredSatoshis() {
+    this.tx._getInputAmount()
     const amount = this.totalSatoshis - (this.tx._inputAmount || 0)
     return amount > 0 ? Math.max(amount, DUST_LIMIT) : 0
   }
 
+  get fundedSatoshis() {
+    this.tx._getInputAmount()
+    return this.tx._outputAmount
+  }
+
   get isFunded() {
-    return this.tx._inputAmount >= this.totalSatoshis;
+    return this.requiredSatoshis <= 0;
   }
 
   listen() {
@@ -191,7 +199,7 @@ class ProxyPayment {
     } else {
       this.fee = this.tx._estimateFee()
     }
-    this.tx.fee( Math.max(this.fee, DUST_LIMIT - (this.tx._outputAmount || 0)) )
+    this.tx.fee(this.fee)
     return this.fee
   }
 

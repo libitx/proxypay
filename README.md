@@ -112,10 +112,12 @@ proxypay({
 const payment = proxypay(config)
 
 // Attributes
-payment.address   // Address to fund
-payment.fee       // Satoshis needed to fund tx
-payment.bip21URI  // Full bip21 URI
-payment.isFunded  // Boolean
+payment.address           // Address to fund
+payment.fee               // TX fee in satoshis
+payment.totalSatoshis     // Toal cost of tx in Satoshis
+payment.requiredSatoshis  // Remaining required Satoshis
+payment.bip21URI          // Full bip21 URI
+payment.isFunded          // Boolean
 
 // Methods
 payment.listen()        // Opens websocket and listens for incoming UTXO

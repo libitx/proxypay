@@ -1,5 +1,6 @@
 const fs = require('fs')
 const bsv = require('bsv')
+const { assert } = require('chai')
 const nock = require('nock')
 const EventMock = require('eventsourcemock')
 const proxypay = require('../src/index')
@@ -22,21 +23,21 @@ describe('proxypay', () => {
   })
 
   it('must instantiate a transaction', () => {
-    expect(payment.tx.constructor.name).toEqual('Transaction')
-    expect(payment.tx.inputs.length).toEqual(0)
-    expect(payment.tx.outputs.length).toEqual(1)
+    assert.equal(payment.tx.constructor.name, 'Transaction')
+    assert.equal(payment.tx.inputs.length, 0)
+    assert.equal(payment.tx.outputs.length, 1)
   })
 
   it('must have an address and BIP21 URI', () => {
-    expect(payment.address).toEqual('1ML7LKjt3MMsZWVeuVbUZqoLCezqdAFW9e')
-    expect(payment.bip21URI).toEqual('bitcoin:1ML7LKjt3MMsZWVeuVbUZqoLCezqdAFW9e?sv&amount=0.00000547')
+    assert.equal(payment.address, '1ML7LKjt3MMsZWVeuVbUZqoLCezqdAFW9e')
+    assert.equal(payment.bip21URI, 'bitcoin:1ML7LKjt3MMsZWVeuVbUZqoLCezqdAFW9e?sv&amount=0.00000547')
   })
 
   it('must show total and required satoshis', () => {
-    expect(payment.fee).toEqual(289)
-    expect(payment.totalSatoshis).toEqual(289)
-    expect(payment.requiredSatoshis).toEqual(547)
-    expect(payment.isFunded).toEqual(false)
+    assert.equal(payment.fee, 210)
+    assert.equal(payment.totalSatoshis, 547)
+    assert.equal(payment.requiredSatoshis, 547)
+    assert.equal(payment.isFunded, false)
   })
 
   describe('with an exact input', () => {
@@ -50,14 +51,15 @@ describe('proxypay', () => {
     })
 
     it('must have an input', () => {
-      expect(payment.tx.inputs.length).toEqual(1)
-      expect(payment.tx.outputs.length).toEqual(2)
+      assert.equal(payment.tx.inputs.length, 1)
+      assert.equal(payment.tx.outputs.length, 1)
     })
 
     it('must show total and required satoshis', () => {
-      expect(payment.totalSatoshis).toEqual(289)
-      expect(payment.requiredSatoshis).toEqual(0)
-      expect(payment.isFunded).toEqual(true)
+      assert.equal(payment.fee, 176)
+      assert.equal(payment.totalSatoshis, 547)
+      assert.equal(payment.requiredSatoshis, 0)
+      assert.equal(payment.isFunded, true)
     })
   })
 
@@ -72,8 +74,33 @@ describe('proxypay', () => {
     })
 
     it('must have an input', () => {
-      expect(payment.tx.inputs.length).toEqual(1)
-      expect(payment.tx.outputs.length).toEqual(2)
+      assert.equal(payment.tx.inputs.length, 1)
+      assert.equal(payment.tx.outputs.length, 2)
+    })
+
+    it('must show total and required satoshis', () => {
+      assert.equal(payment.fee, 210)
+      assert.equal(payment.totalSatoshis, 1500)
+      assert.equal(payment.requiredSatoshis, 0)
+      assert.equal(payment.isFunded, true)
+    })
+  })
+
+  describe('with additional payment', () => {
+    beforeEach(() => {
+      payment.addOutput({ to: '1NbL18PU1r3kjVzLzh44Hkuj6nc36RBZ8Z', satoshis: 5000 })
+    })
+
+    it('must have an input', () => {
+      assert.equal(payment.tx.inputs.length, 0)
+      assert.equal(payment.tx.outputs.length, 2)
+    })
+
+    it('must show total and required satoshis', () => {
+      assert.equal(payment.fee, 244)
+      assert.equal(payment.totalSatoshis, 5244)
+      assert.equal(payment.requiredSatoshis, 5244)
+      assert.equal(payment.isFunded, false)
     })
   })
 
@@ -84,12 +111,11 @@ describe('proxypay', () => {
         .replyWithFile(200, __dirname + '/mocks/getutxo1.json', { 'Content-Type': 'application/json' })
     })
 
-    it('must fetch utxo from server', async next => {
+    it('must fetch utxo from server', async () => {
       await payment.getUtxo()
-      expect(payment.tx.inputs.length).toEqual(1)
-      expect(payment.tx.outputs.length).toEqual(2)
-      expect(payment.isFunded).toBe(true)
-      next()
+      assert.equal(payment.tx.inputs.length, 1)
+      assert.equal(payment.tx.outputs.length, 2)
+      assert.isTrue(payment.isFunded)
     })
   })
 
@@ -106,10 +132,10 @@ describe('proxypay', () => {
     })
 
     it('must fetch utxo from server', () => {
-      expect(payment.tx.inputs.length).toEqual(1)
-      expect(payment.tx._inputAmount).toEqual(1300)
-      expect(payment.tx.outputs.length).toEqual(2)
-      expect(payment.isFunded).toBe(true)
+      assert.equal(payment.tx.inputs.length, 1)
+      assert.equal(payment.tx._inputAmount, 1300)
+      assert.equal(payment.tx.outputs.length, 2)
+      assert.isTrue(payment.isFunded)
     })
   })
 })

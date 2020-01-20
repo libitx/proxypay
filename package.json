@@ -1,6 +1,6 @@
 {
   "name": "proxypay",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Broadcast complex transactions to the Bitcoin SV blockchain from any wallet.",
   "main": "src/index.js",
   "browser": "dist/proxypay.min.js",
@@ -9,10 +9,10 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c rollup.config.js",
-    "test": "jasmine --config=test/support/jasmine.json"
+    "test": "mocha \"test/**/*.test.js\""
   },
   "peerDependencies": {
-    "bsv": "^0.27.2"
+    "bsv": "^1.2.0"
   },
   "dependencies": {
     "eventsource": "^1.0.7",
@@ -21,8 +21,9 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "chai": "^4.2.0",
     "eventsourcemock": "^2.0.0",
-    "jasmine": "^3.4.0",
+    "mocha": "^7.0.0",
     "nock": "^10.0.6",
     "rollup": "^1.16.3",
     "rollup-plugin-babel": "^4.3.3",
