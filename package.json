@@ -1,6 +1,6 @@
 {
   "name": "proxypay",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Broadcast complex transactions to the Bitcoin SV blockchain from any wallet.",
   "main": "src/index.js",
   "browser": "dist/proxypay.min.js",
