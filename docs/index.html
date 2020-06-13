@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Proxypay demo</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="//unpkg.com/tachyons">
+  <script src="//unpkg.com/bsv@1.5.3"></script>
+  <script src="/dist/proxypay.min.js"></script>
+</head>
+<body class="sans-serif near-black">
+  <header class="ph3 near-white bg-dark-gray">
+    <div class="mw7 center pt4 pb5">
+      <h1 class="mv0 f-subheadline lh-title light-gray">Proxy<span class="light-blue">pay</span></h1>
+      <h2 class="mv0 f3 lh-title fw3 moon-gray">Demo</h2>
+    </div>
+  </header>
+  <main class="ph3">
+    <div class="mw7 center pv5">
+      <p>v2 demo</p>
+      <div id="demo"></div>
+    </div>
+  </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(e) {
+  const { Proxypay, embed } = ProxypayClient
+
+  const payment = Proxypay.create({
+    key: 'L5SC6hYiLvRxphhwReUjS2itgz7HuGGr1qUTG2BJudCvP2E6LSwq',
+    outputs: [{to: '1D4ExbsVDp2vo2NrLxiEbRHxpG8kf62CgD', satoshis: 1000}],
+    description: 'Testing proxypay for shits and giggles',
+    debug: true
+  })
+
+  payment
+    .mount(embed('#demo'))
+    //.on('invoice', _ => {})
+    //.on('payment', _ => {})
+    //.on('error', _ => {})
+})
+</script>
+  
+</body>
+</html>

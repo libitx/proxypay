@@ -9,7 +9,7 @@ export default  {
   output: {
     file: 'dist/proxypay.min.js',
     format: 'umd',
-    name: 'proxypay',
+    name: 'ProxypayClient',
     globals: {
       bsv: 'bsv'
     }
