@@ -1,5 +1,14 @@
 # Proxypay
 
+> ⚠️ Project is no longer maintained ⚠️
+
+Proxypay has been made redundant by my more recent projects:
+
+* [TxForge - Modern transaction builder for JavaScript](https://github.com/libitx/txforge)
+* [Paypresto - Let your users fund complex transactions from any wallet](https://www.paypresto.co/)
+
+---
+
 Proxypay is a library for building complex transaction types which can be broadcasted to the Bitcoin SV blockchain by sending a simple payment from **any** wallet.
 
 * [View demo](https://libitx.github.io/proxypay)
